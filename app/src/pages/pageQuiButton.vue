@@ -21,7 +21,8 @@
     },
     methods: {
       doSth: function () {
-        alert('你点击了组件1的click:btnClickEvent')
+        console.log('abc', this.$)
+        //alert('你点击了组件1的click:btnClickEvent')
       },
       doSth2: function () {
         alert('你点击了组件2的click:btnClickEvent')
