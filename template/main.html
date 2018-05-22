@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>input</title>
+	</head>
+	<body>
+		<div class="">
+			<input id='id-input' type="text" name="" value="">
+			<div class="">
+				<ul class="js-words-list words-list">
+				</ul>
+			</div>
+		</div>
+
+
+		<script type="text/javascript">
+			const log = console.log.bind(console)
+			const e = function (sel) {
+				let e = document.querySelector(sel)
+				return e
+			}
+
+			var ajax = function(request) {
+	      var r = new XMLHttpRequest()
+	      r.open(request.method, request.url, true)
+	      if (request.contentType !== undefined) {
+	          r.setRequestHeader('Content-Type', request.contentType)
+	      }
+	      r.onreadystatechange = function(event) {
+	          if(r.readyState === 4) {
+	              request.callback(r.response)
+	          }
+	      }
+	      if (request.method === 'GET') {
+	          r.send()
+	      } else {
+	          r.send(request.data)
+	      }
+	    }
+
+			function templateOfWordList(value) {
+				let t = `<li>${value}</li>`
+				return t
+			}
+
+
+			function renderWordList(words) {
+				e('.js-words-list').innerHTML = ''
+				for (let i = 0; i < words.length; i++) {
+					let w = words[i]
+					let t = templateOfWordList(w)
+					e('.js-words-list').insertAdjacentHTML('beforeend', t);
+				}
+			}
+
+			function wordFormLib(key) {
+					var request = {
+						method: 'GET',
+						url: '/api/words_list?word=' + key,
+						contentType: 'application/json',
+						// 不考虑错误情况(断网/服务器返回错误等等)
+						callback: function(response) {
+							var b = JSON.parse(response)
+							renderWordList(b)
+							log('wodds', b)
+						}
+					}
+					ajax(request)
+			}
+
+			function inputEvent() {
+				let input = e('input')
+				input.addEventListener('input', function (event) {
+					let target = event.target
+					let value = target.value
+					log('value', value)
+					wordFormLib(value)
+				})
+			}
+
+			function __main() {
+				let input = e('input')
+				inputEvent()
+			}
+			__main()
+		</script>
+	</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>blog details</title>
+  </head>
+  <body data-id="{{blog_id}}">
+   id:  {{blog_id}}
+  </body>
+
+  <script>
+    var log = console.log.bind(console)
+    var ajax = function(request) {
+      var r = new XMLHttpRequest()
+      r.open(request.method, request.url, true)
+      if (request.contentType !== undefined) {
+          r.setRequestHeader('Content-Type', request.contentType)
+      }
+      r.onreadystatechange = function(event) {
+          if(r.readyState === 4) {
+              request.callback(r.response)
+          }
+      }
+      if (request.method === 'GET') {
+          r.send()
+      } else {
+          r.send(request.data)
+      }
+    }
+
+    var blogOne = function(id) {
+      var request = {
+        method: 'GET',
+        url: '/api/blog/' + id,
+        contentType: 'application/json',
+        // 不考虑错误情况(断网/服务器返回错误等等)
+        callback: function(response) {
+          var b = JSON.parse(response)
+          log('博客详细数据', b)
+        }
+      }
+      ajax(request)
+    }
+
+    var __main = function() {
+      var blogId = document.body.dataset.id
+      blogOne(blogId)
+    }
+
+    __main()
+  </script>
+
+
+</html>
